@@ -1,0 +1,6 @@
+[package]
+name = "TuxenOS"
+version = "0.1.0"
+authors = ["troot <sam_d_olson@hotmail.com>"]
+
+[dependencies]

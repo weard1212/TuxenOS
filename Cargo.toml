@@ -1,12 +1,14 @@
 [package]
 name = "TuxenOS"
 version = "0.1.0"
-authors = ["troot <sam_d_olson@hotmail.com>"]
+authors = ["troot <sam_d_olson@hotmail.com>; Max <Maxwell.McElhone@southeasttech.edu>"]
 
+# the profile used for `cargo build`
 [profile.dev]
-panic = "abort"
+panic = "abort" # disable stack unwinding on panic
 
+# the profile used for `cargo build --release`
 [profile.release]
-panic = "abort"
+panic = "abort" # disable stack unwinding on panic
 
 [dependencies]

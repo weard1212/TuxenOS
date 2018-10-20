@@ -1,2 +1,9 @@
 # TuxenOS
 The most advanced linux based operating system ever.
+
+# To Use
+1. compile the kernel by running `bootimage build --target x86_64-tuxen_os.json`
+
+2. Run the kernel in QEMU using the command `qemu-system-x86_64 -drive format=raw,file=bootimage-TuxenOS.bin`
+
+3. Run `cargo clean` before pushing to clear out clutter

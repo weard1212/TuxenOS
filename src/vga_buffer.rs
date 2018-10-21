@@ -139,21 +139,6 @@ impl fmt::Write for Writer {
     }
 }
 
-
-// test function for the write_byte and write_string functions
-/*pub fn print_something() {
-    use core::fmt::Write;
-    let mut writer = Writer {
-        column_position: 0,
-        color_code: ColorCode::new(Color::Yellow, Color::Black),
-        buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
-    };
-
-    writer.write_byte(b'H');
-    writer.write_string("ello ");
-    write!(writer, "The numbers are {} and {}", 42, 1.0/3.0).unwrap();
-}*/
-
 //making macros to create the functions of print and print ln
 macro_rules! print {
     ($($arg:tt)*) => ($crate::vga_buffer::print(format_args!($($arg)*)));
@@ -169,3 +154,97 @@ pub fn print(args: fmt::Arguments) {
     use core::fmt::Write;
     WRITER.lock().write_fmt(args).unwrap();
 }
+
+
+
+
+/// SECTION FOR UNIT TESTS
+
+
+#[cfg(test)]//only compile in test 
+mod test {
+    use super::*;//import all modules from the parent
+
+    fn construct_writer() -> Writer {
+        use std::boxed::Box;
+    
+        let buffer = construct_buffer();
+        Writer {
+            column_position: 0,
+            color_code: ColorCode::new(Color::Blue, Color::Magenta),
+            buffer: Box::leak(Box::new(buffer)),
+        }
+    }
+    
+    fn construct_buffer() -> Buffer {
+        use array_init::array_init;
+        
+        Buffer {
+            chars: array_init(|_| array_init(|_| Volatile::new(empty_char()))),
+        }
+    }
+    
+    
+    fn empty_char() -> ScreenChar {
+        ScreenChar {
+            ascii_character: b' ',
+            color_code: ColorCode::new(Color::Green, Color::Brown),
+        }
+    }
+    
+    //make sure that write_byte writes the right character where it is supposed to
+    #[test]  
+    fn write_byte() {
+        let mut writer = construct_writer();
+        writer.write_byte(b'X');
+        writer.write_byte(b'Y');
+    
+        for (i, row) in writer.buffer.chars.iter().enumerate() {
+            for (j, screen_char) in row.iter().enumerate() {
+                let screen_char = screen_char.read();
+                if i == BUFFER_HEIGHT - 1 && j == 0 {
+                    assert_eq!(screen_char.ascii_character, b'X');
+                    assert_eq!(screen_char.color_code, writer.color_code);
+                } else if i == BUFFER_HEIGHT - 1 && j == 1 {
+                    assert_eq!(screen_char.ascii_character, b'Y');
+                    assert_eq!(screen_char.color_code, writer.color_code);
+                } else {
+                    assert_eq!(screen_char, empty_char());
+                }
+            }
+        }
+    }
+    
+    // test that the writer is writing the correct characters in
+    // the proper places with the right colors
+    #[test]
+    fn write_formatted() {
+        use core::fmt::Write;
+
+        let mut writer = construct_writer();
+        writeln!(&mut writer, "a").unwrap();
+        writeln!(&mut writer, "b{}", "c").unwrap();
+
+        for (i, row) in writer.buffer.chars.iter().enumerate() {
+            for (j, screen_char) in row.iter().enumerate() {
+                let screen_char = screen_char.read();
+                if i == BUFFER_HEIGHT - 3 && j == 0 {
+                    assert_eq!(screen_char.ascii_character, b'a');
+                    assert_eq!(screen_char.color_code, writer.color_code);
+                } else if i == BUFFER_HEIGHT - 2 && j == 0 {
+                    assert_eq!(screen_char.ascii_character, b'b');
+                    assert_eq!(screen_char.color_code, writer.color_code);
+                } else if i == BUFFER_HEIGHT - 2 && j == 1 {
+                    assert_eq!(screen_char.ascii_character, b'c');
+                    assert_eq!(screen_char.color_code, writer.color_code);
+                } else if i >= BUFFER_HEIGHT - 2 {
+                    assert_eq!(screen_char.ascii_character, b' ');
+                    assert_eq!(screen_char.color_code, writer.color_code);
+                } else {
+                    assert_eq!(screen_char, empty_char());
+                }
+            }
+        }
+    }
+}
+

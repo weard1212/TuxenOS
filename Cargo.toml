@@ -15,6 +15,8 @@ panic = "abort" # disable stack unwinding on panic
 bootloader_precompiled = "0.2.0"
 volatile = "0.2.3"
 spin = "0.4.6"
+uart_16550 = "0.1.0" # for sending data over serial port
+x86_64 = "0.2.8" # for writing to I/O ports
 
 # target for the bootimage package
 [package.metadata.bootimage]
@@ -23,3 +25,7 @@ default-target = "x86_64-blog_os.json"
 [dependencies.lazy_static]
 version = "1.0"
 features = ["spin_no_std"]
+
+#only used for tests and not normal builds
+[dev-dependencies]
+array-init = "0.0.3"

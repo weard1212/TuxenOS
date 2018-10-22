@@ -47,9 +47,32 @@ pub extern "C" fn _start() -> ! {
     /*use core::fmt::Write;
     vga_buffer::WRITER.lock().write_str("Hello again").unwrap();
     write!(vga_buffer:WRITER.lock(), ", some numbers: {} {}", 42, 1.337).unwrap();*/
-    println!("Hello World{}", "!");
+    //println!("Hello World{}", "!");
     serial_println!("Hello Host{}", "!");
-    
+    println!("___ _  _ _  _ ____ _  _    ____ ____ ");
+    println!(" |  |  |  \\/  |___ |\\ |    |  | [__  ");
+    println!(" |  |__| _/\\_ |___ | \\|    |__| ___] ");
+    println!();
+    println!();
+    println!();
+    println!();
+    println!();
+    println!();
+    println!();
+    println!();
+    println!();
+    println!();
+    println!();
+    println!();
+    println!();
+    println!();
+    println!();
+    println!();
+    println!();
+    println!();
+    println!();
+    println!();
+
     unsafe { exit_qemu(); }
     
     loop {

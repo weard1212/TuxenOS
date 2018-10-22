@@ -20,7 +20,7 @@ x86_64 = "0.2.8" # for writing to I/O ports
 
 # target for the bootimage package
 [package.metadata.bootimage]
-default-target = "x86_64-blog_os.json"
+default-target = "x86_64-tuxen_os.json"
 
 [dependencies.lazy_static]
 version = "1.0"
@@ -29,3 +29,6 @@ features = ["spin_no_std"]
 #only used for tests and not normal builds
 [dev-dependencies]
 array-init = "0.0.3"
+
+[features]
+integration-test = []

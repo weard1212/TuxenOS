@@ -17,3 +17,8 @@ The most advanced operating system ever.
     * for exiting the argument `-device isa-debug-exit,iobase=0xf4,iosize=0x04` is required
 
 3. Run `cargo clean` before pushing to clear out clutter
+
+# Testing
+1. To run integration tests. `bootimage test`
+
+2. To run the unit tests. `cargo test`

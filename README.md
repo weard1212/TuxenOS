@@ -6,7 +6,10 @@ The most advanced operating system ever.
 
 2. The required crates and components can be installed by running ``cargo install bootimage && rustup component add rust-src``
 
-# To Use 
+# To Compile
+1. run ``build.sh``
+
+# To Compile Manually (Optional)
 1. compile the kernel by running ``bootimage build --target x86_64-tuxen_os.json`` on a linux machine
 
 2. Run the kernel in QEMU using the command `qemu-system-x86_64 -drive format=raw,file=target/x86_64-tuxen_os/debug/bootimage-TuxenOS.bin`

@@ -4,7 +4,7 @@ The most advanced operating system ever.
 # Required Rust Setup
 1. Your rust configuration needs to be set to nightly to do this run ``rustup default nightly``
 
-2. The required crates and components can be installed by running ``cargo install bootimage && rustup component add rust-src``
+2. The required crates and components can be installed by running ``cargo install bootimage cargo-xbuild && rustup component add rust-src``
 
 # To Compile
 1. run ``build.sh``

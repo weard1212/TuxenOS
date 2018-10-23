@@ -51,8 +51,13 @@ pub extern "C" fn _start() -> ! {
     println!();
     println!();
     println!();
-    println!();
 
+    TuxenOS::interrupts::init_idt();
+    
+    // call a breakpoint exception
+    x86_64::instructions::int3();
+    
+    println!("It didn't crash!!!!!!! :)");
     
     //unsafe { exit_qemu(); }
     

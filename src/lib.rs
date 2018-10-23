@@ -1,4 +1,5 @@
 #![no_std] // don't link the Rust standard library
+#![feature(abi_x86_interrupt)] // to allow the use because of instability of this resource
 
 extern crate bootloader_precompiled;
 extern crate spin;
@@ -14,8 +15,11 @@ extern crate array_init;
 extern crate std;
 
 // We need to make these public
+#[macro_use]
 pub mod vga_buffer;
+//pub mod gdt;
 pub mod serial;
+pub mod interrupts;
 
 
 //unsafe because it relies on the fact that their is something at that port

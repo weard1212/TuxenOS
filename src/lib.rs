@@ -17,7 +17,7 @@ extern crate std;
 // We need to make these public
 #[macro_use]
 pub mod vga_buffer;
-//pub mod gdt;
+pub mod gdt;
 pub mod serial;
 pub mod interrupts;
 

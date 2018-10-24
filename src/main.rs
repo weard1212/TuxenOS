@@ -52,10 +52,19 @@ pub extern "C" fn _start() -> ! {
     println!();
     println!();
 
+    TuxenOS::gdt::init();
     TuxenOS::interrupts::init_idt();
     
     // call a breakpoint exception
-    x86_64::instructions::int3();
+    //x86_64::instructions::int3();
+    //unsafe{ *(0xdeadbeef as *mut u64) = 42; };
+    
+    //excuse me while I cause a stack overflow exception
+    fn stack_overflow(){
+        stack_overflow();
+    }
+    stack_overflow();
+    
     
     println!("It didn't crash!!!!!!! :)");
     

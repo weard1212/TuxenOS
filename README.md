@@ -8,6 +8,7 @@ The most advanced operating system ever.
 
 # To Compile
 1. run ``build.sh``
+2. to compile with default parameters ``bootimage run``
 
 # To Compile Manually (Optional)
 1. compile the kernel by running ``bootimage build --target x86_64-tuxen_os.json`` on a linux machine

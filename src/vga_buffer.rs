@@ -2,13 +2,13 @@
 use volatile::Volatile;
 use core::fmt;
 use spin::Mutex;
-
 const BUFFER_HEIGHT: usize = 25;
 const BUFFER_WIDTH: usize = 80;
 
 #[allow(dead_code)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(u8)]
+
 pub enum Color {
     Black = 0,
     Blue = 1,
@@ -76,6 +76,7 @@ impl Writer {
         match byte {
             b'\n' => self.new_line(),
             b'\t' => self.tab(),
+            b'\r' => self.shutdown(),
             byte => {
                 if self.column_position >= BUFFER_WIDTH {
                     self.new_line();
@@ -99,7 +100,7 @@ impl Writer {
         for byte in s.bytes() {
             match byte {
                 // printable ASCII byte or newline
-                0x20...0x7e | b'\n' | b'\t' => self.write_byte(byte),
+                0x20...0x7e | b'\n' | b'\t' | b'\r'=> self.write_byte(byte),
                 // not part of printable ASCII range
                 _ => self.write_byte(0xfe),
             }
@@ -122,6 +123,12 @@ impl Writer {
     // create a tab for the \t character when called.
     fn tab(&mut self){
         self.write_string("    ");
+    }
+
+
+    fn shutdown(&mut self) {
+        use power;
+        unsafe {power::tshutdownet();}
     }
 
     // clear a row by writing a blank space to every character
@@ -167,7 +174,6 @@ pub fn print(args: fmt::Arguments) {
         WRITER.lock().write_fmt(args).unwrap();
     });
 }
-
 
 
 

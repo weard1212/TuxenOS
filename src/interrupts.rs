@@ -128,9 +128,11 @@ extern "x86-interrupt" fn keyboard_interrupt_handler( stack_frame: &mut Exceptio
         0x35 => Some('/'),
         0x36 => Some('>'), //Right shift
         0xB9 => Some(' '), //Space
+        0x01  => Some('\r'),
         _ => None,
     };
     if let Some(key) = key {
+
         print!("{}", key);
     }
 

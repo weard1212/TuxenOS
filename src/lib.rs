@@ -1,5 +1,6 @@
 #![no_std] // don't link the Rust standard library
 #![feature(abi_x86_interrupt)] // to allow the use because of instability of this resource
+#![feature(asm)]
 
 extern crate bootloader_precompiled;
 extern crate spin;
@@ -21,6 +22,7 @@ pub mod vga_buffer;
 pub mod gdt;
 pub mod serial;
 pub mod interrupts;
+pub mod power;
 
 
 //unsafe because it relies on the fact that their is something at that port

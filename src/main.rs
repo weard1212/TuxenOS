@@ -24,10 +24,10 @@ fn panic(info: &PanicInfo) -> ! {
 #[cfg(not(test))]
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
+    let mut line_text = "";
     /*use core::fmt::Write;
     vga_buffer::WRITER.lock().write_str("Hello again").unwrap();
     write!(vga_buffer:WRITER.lock(), ", some numbers: {} {}", 42, 1.337).unwrap();*/
-
     //println!("Hello World{}", "!");
     serial_println!("Hello Host{}", "!");
     println!("___ _  _ _  _ ____ _  _    ____ ____ ");
@@ -74,7 +74,6 @@ pub extern "C" fn _start() -> ! {
     println!("It didn't crash!!!!!!! :)");
     
     //unsafe { exit_qemu(); }
-    
-    
+
     TuxenOS::hlt_loop();
 }

@@ -4,7 +4,6 @@
 #![cfg_attr(test, allow(dead_code, unused_macros, unused_imports))]//if running a test allow for unused macros and code
 
 use core::panic::PanicInfo;
-use TuxenOS::interrupts::PICS;
 
 #[macro_use]
 extern crate TuxenOS;
@@ -14,7 +13,7 @@ extern crate TuxenOS;
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     println!("{}", info);
-    TuxenOS::hlt_loop();
+    loop {}
 }
 
 
@@ -68,7 +67,6 @@ pub extern "C" fn _start() -> ! {
     
     // initialize is unsafe because it could be misconfigured.
     unsafe{ PICS.lock().initialize() };
-    x86_64::instructions::interrupts::enable(); //allow interrupts
     
     
     println!("It didn't crash!!!!!!! :)");
@@ -76,5 +74,7 @@ pub extern "C" fn _start() -> ! {
     //unsafe { exit_qemu(); }
     
     
-    TuxenOS::hlt_loop();
+    loop {
+
+    }
 }

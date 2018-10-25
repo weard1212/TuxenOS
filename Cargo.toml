@@ -17,6 +17,7 @@ volatile = "0.2.3"
 spin = "0.4.6"
 uart_16550 = "0.1.0" # for sending data over serial port
 x86_64 = "0.2.8" # for writing to I/O ports
+pic8259_simple = "0.1.1" # programmable interrupt controller in the style of the 1976 Intel 8259 (Probably will switch to APIC later.)
 
 # target for the bootimage package
 [package.metadata.bootimage]

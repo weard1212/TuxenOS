@@ -154,12 +154,7 @@ macro_rules! println {
 
 pub fn print(args: fmt::Arguments) {
     use core::fmt::Write;
-    use x86_64::instructions::interrupts;
-    
-    //prevent deadlocks in our kernel from this function
-    interrupts::without_interrupts(|| {
-        WRITER.lock().write_fmt(args).unwrap();
-    });
+    WRITER.lock().write_fmt(args).unwrap();
 }
 
 

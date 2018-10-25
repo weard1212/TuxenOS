@@ -34,11 +34,3 @@ pub unsafe fn exit_qemu() {
     port.write(0);
 }
 
-
-// hlt is an instruction that puts the cpu into a sleep state until the 
-// next interrupt happens
-pub fn hlt_loop() -> ! {
-    loop {
-        x86_64::instructions::hlt();
-    }
-}

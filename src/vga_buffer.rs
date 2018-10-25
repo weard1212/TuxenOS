@@ -32,7 +32,7 @@ pub enum Color {
 // lazy_static is a macro that prevents the initialization of static
 // methods at compile time and delays them to run time.
 lazy_static!{
-    
+
     pub static ref WRITER: Mutex<Writer> = Mutex::new(Writer{
         column_position: 0,
         color_code: ColorCode::new(Color::Green, Color::Black),
@@ -75,6 +75,7 @@ impl Writer {
     pub fn write_byte(&mut self, byte: u8) {
         match byte {
             b'\n' => self.new_line(),
+            b'\t' => self.tab(),
             byte => {
                 if self.column_position >= BUFFER_WIDTH {
                     self.new_line();
@@ -98,14 +99,14 @@ impl Writer {
         for byte in s.bytes() {
             match byte {
                 // printable ASCII byte or newline
-                0x20...0x7e | b'\n' => self.write_byte(byte),
+                0x20...0x7e | b'\n' | b'\t' => self.write_byte(byte),
                 // not part of printable ASCII range
                 _ => self.write_byte(0xfe),
             }
 
         }
     }
-    
+
     // move every row up one and then clear the last row.
     fn new_line(&mut self) {
         for row in 1..BUFFER_HEIGHT {
@@ -117,7 +118,12 @@ impl Writer {
         self.clear_row(BUFFER_HEIGHT - 1);
         self.column_position = 0;
     }
-    
+
+    // create a tab for the \t character when called.
+    fn tab(&mut self){
+        self.write_string("    ");
+    }
+
     // clear a row by writing a blank space to every character
     fn clear_row(&mut self, row: usize){
         let blank = ScreenChar{
@@ -155,7 +161,7 @@ macro_rules! println {
 pub fn print(args: fmt::Arguments) {
     use core::fmt::Write;
     use x86_64::instructions::interrupts;
-    
+
     //prevent deadlocks in our kernel from this function
     interrupts::without_interrupts(|| {
         WRITER.lock().write_fmt(args).unwrap();
@@ -168,13 +174,13 @@ pub fn print(args: fmt::Arguments) {
 /// SECTION FOR UNIT TESTS
 
 
-#[cfg(test)]//only compile in test 
+#[cfg(test)]//only compile in test
 mod test {
     use super::*;//import all modules from the parent
 
     fn construct_writer() -> Writer {
         use std::boxed::Box;
-    
+
         let buffer = construct_buffer();
         Writer {
             column_position: 0,
@@ -182,30 +188,30 @@ mod test {
             buffer: Box::leak(Box::new(buffer)),
         }
     }
-    
+
     fn construct_buffer() -> Buffer {
         use array_init::array_init;
-        
+
         Buffer {
             chars: array_init(|_| array_init(|_| Volatile::new(empty_char()))),
         }
     }
-    
-    
+
+
     fn empty_char() -> ScreenChar {
         ScreenChar {
             ascii_character: b' ',
             color_code: ColorCode::new(Color::Green, Color::Brown),
         }
     }
-    
+
     //make sure that write_byte writes the right character where it is supposed to
-    #[test]  
+    #[test]
     fn write_byte() {
         let mut writer = construct_writer();
         writer.write_byte(b'X');
         writer.write_byte(b'Y');
-    
+
         for (i, row) in writer.buffer.chars.iter().enumerate() {
             for (j, screen_char) in row.iter().enumerate() {
                 let screen_char = screen_char.read();
@@ -221,7 +227,7 @@ mod test {
             }
         }
     }
-    
+
     // test that the writer is writing the correct characters in
     // the proper places with the right colors
     #[test]
@@ -254,4 +260,3 @@ mod test {
         }
     }
 }
-

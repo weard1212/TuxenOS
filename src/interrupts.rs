@@ -22,13 +22,13 @@ lazy_static! {
             //double fault redirected to second stack
             idt.double_fault.set_handler_fn(double_fault_handler).set_stack_index(gdt::DOUBLE_FAULT_IST_INDEX);
         }
-        
+
         //timer interrupts
         idt[usize::from(TIMER_INTERRUPT_ID)].set_handler_fn(timer_interrupt_handler);
-        
+
         //keyboard interrupts
         idt[usize::from(KEYBOARD_INTERRUPT_ID)].set_handler_fn(keyboard_interrupt_handler);
-        
+
         idt
     };
 }
@@ -38,15 +38,15 @@ pub fn init_idt(){
 }
 
 
-// breakpoint exception handler. This is how debuggers work by throughing 
-// a breakpoint exception then replacing the exception call with the original 
+// breakpoint exception handler. This is how debuggers work by throughing
+// a breakpoint exception then replacing the exception call with the original
 // stack instruction. x86-interrupt is the type of code that is run
 extern "x86-interrupt" fn breakpoint_handler( stack_frame: &mut ExceptionStackFrame ){
     println!("EXCEPTION: BREAKPOINT\n{:#?}", stack_frame);
 }
 
-// this is a double fault handler. it cautches the unhandled faults and 
-// prevents triple faults which cause system resets and cannot be 
+// this is a double fault handler. it cautches the unhandled faults and
+// prevents triple faults which cause system resets and cannot be
 // recovered from.
 extern "x86-interrupt" fn double_fault_handler( stack_frame: &mut ExceptionStackFrame, _error_code: u64){
     println!("EXCEPTION: DOUBLE FAULT\n{:#?}", stack_frame);
@@ -57,10 +57,10 @@ extern "x86-interrupt" fn double_fault_handler( stack_frame: &mut ExceptionStack
 // INTERUPTS
 //
 
-//timer interrupts 
+//timer interrupts
 extern "x86-interrupt" fn timer_interrupt_handler( stack_frame: &mut ExceptionStackFrame){
-    print!(".");
-    
+    //print!(".");
+
     // tells the system that we are done handling this interruption
     unsafe{ PICS.lock().notify_end_of_interrupt(TIMER_INTERRUPT_ID)}
 }
@@ -71,7 +71,7 @@ extern "x86-interrupt" fn keyboard_interrupt_handler( stack_frame: &mut Exceptio
     use x86_64::instructions::port::Port;
     let port = Port::new(0x60);// the port for the keyboard
     let scancode: u8 = unsafe { port.read() };// the key that was pressed last
-    
+
     // all of the keycodes for more keycodes https://wiki.osdev.org/Keyboard#Scan_Code_Set_1
     let key = match scancode {
         0x02 => Some('1'),
@@ -109,9 +109,7 @@ extern "x86-interrupt" fn keyboard_interrupt_handler( stack_frame: &mut Exceptio
     if let Some(key) = key {
         print!("{}", key);
     }
-    
+
     unsafe{ PICS.lock().notify_end_of_interrupt(KEYBOARD_INTERRUPT_ID)}
-    
+
 }
-
-

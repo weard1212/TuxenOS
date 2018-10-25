@@ -77,6 +77,7 @@ impl Writer {
             b'\n' => self.new_line(),
             b'\t' => self.tab(),
             b'\r' => self.shutdown(),
+            b'"' => self.backspace(),
             byte => {
                 if self.column_position >= BUFFER_WIDTH {
                     self.new_line();
@@ -100,7 +101,7 @@ impl Writer {
         for byte in s.bytes() {
             match byte {
                 // printable ASCII byte or newline
-                0x20...0x7e | b'\n' | b'\t' | b'\r'=> self.write_byte(byte),
+                0x20...0x7e | b'\n' | b'\t' | b'\r' => self.write_byte(byte),
                 // not part of printable ASCII range
                 _ => self.write_byte(0xfe),
             }
@@ -125,6 +126,21 @@ impl Writer {
         self.write_string("    ");
     }
 
+    //backspace function
+    fn backspace(&mut self){
+        let row = BUFFER_HEIGHT - 1;
+        let mut col = 0;
+        if self.column_position > 0{
+            col = self.column_position - 1;
+        }
+
+        let color_code = self.color_code;
+        self.buffer.chars[row][col].write(ScreenChar {
+            ascii_character: b' ',
+            color_code: color_code,
+        });
+        self.column_position = col;
+    }
 
     fn shutdown(&mut self) {
         use power;
@@ -176,9 +192,9 @@ pub fn print(args: fmt::Arguments) {
 }
 
 
-
+///
 /// SECTION FOR UNIT TESTS
-
+///
 
 #[cfg(test)]//only compile in test
 mod test {

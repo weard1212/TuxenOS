@@ -58,7 +58,7 @@ extern "x86-interrupt" fn double_fault_handler( stack_frame: &mut ExceptionStack
 //
 
 //timer interrupts
-extern "x86-interrupt" fn timer_interrupt_handler( stack_frame: &mut ExceptionStackFrame){
+extern "x86-interrupt" fn timer_interrupt_handler( _stack_frame: &mut ExceptionStackFrame){
     //print!(".");
 
     // tells the system that we are done handling this interruption
@@ -66,7 +66,7 @@ extern "x86-interrupt" fn timer_interrupt_handler( stack_frame: &mut ExceptionSt
 }
 
 // keyboard interrupts
-extern "x86-interrupt" fn keyboard_interrupt_handler( stack_frame: &mut ExceptionStackFrame){
+extern "x86-interrupt" fn keyboard_interrupt_handler( _stack_frame: &mut ExceptionStackFrame){
 
     use x86_64::instructions::port::Port;
     let port = Port::new(0x60);// the port for the keyboard
@@ -86,7 +86,7 @@ extern "x86-interrupt" fn keyboard_interrupt_handler( stack_frame: &mut Exceptio
         0x0b => Some('0'),
         0x0C => Some('-'),
         0x0D => Some('='),
-        //0x0E => Some(''), this is backspace
+        0x0E => Some('"'), //this is backspace
         0x0F => Some('\t'),
         0x10 => Some('Q'),
         0x11 => Some('W'),
@@ -101,7 +101,7 @@ extern "x86-interrupt" fn keyboard_interrupt_handler( stack_frame: &mut Exceptio
         0x1A => Some('['),
         0x1B => Some(']'),
         0x1c => Some('\n'),
-        //0x1d => Some(''), left control
+        //0x1d => Some(''), //left control
         0x1e => Some('A'),
         0x1f => Some('S'),
         0x20 => Some('D'),

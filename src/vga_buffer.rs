@@ -127,8 +127,9 @@ impl Writer {
 
 
     fn shutdown(&mut self) {
+        self.write_string("Shutting down");
         use power;
-        unsafe {power::tshutdownet();}
+        unsafe {power::shutdown();}
     }
 
     // clear a row by writing a blank space to every character

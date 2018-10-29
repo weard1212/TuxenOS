@@ -55,25 +55,26 @@ pub extern "C" fn _start() -> ! {
 
     TuxenOS::gdt::init();
     TuxenOS::interrupts::init_idt();
-    
+
     // call a breakpoint exception
     //x86_64::instructions::int3();
     //unsafe{ *(0xdeadbeef as *mut u64) = 42; };
-    
+
     //excuse me while I cause a stack overflow exception
     //fn stack_overflow(){
     //    stack_overflow();
     //}
     //stack_overflow();
-    
+
     // initialize is unsafe because it could be misconfigured.
     unsafe{ PICS.lock().initialize() };
     x86_64::instructions::interrupts::enable(); //allow interrupts
-    
-    
+
+
     println!("It didn't crash!!!!!!! :)");
-    
+
     //unsafe { exit_qemu(); }
+
 
     TuxenOS::hlt_loop();
 }

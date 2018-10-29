@@ -37,7 +37,7 @@ pub unsafe fn exit_qemu() {
 }
 
 
-// hlt is an instruction that puts the cpu into a sleep state until the 
+// hlt is an instruction that puts the cpu into a sleep state until the
 // next interrupt happens
 pub fn hlt_loop() -> ! {
     loop {

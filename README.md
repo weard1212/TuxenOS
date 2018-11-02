@@ -1,3 +1,4 @@
+This version is not the most recent. For the most up to date version [view this project on gitlab](https://gitlab.com/weard1212/TuxenOS)
 # TuxenOS
 The most advanced operating system ever.
 
